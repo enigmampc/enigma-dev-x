@@ -56,10 +56,10 @@ docker exec -it secretdev /bin/bash
 The local blockchain has a couple of keys setup for you (similar to accounts if you're familiar with Truffle Ganache). The keys are stored in the `test` keyring backend, which makes it easier for local development and testing.
 
 ```bash
-secretcli keys list --keyring-backend test
+secretd keys list --keyring-backend test
 ````
 
-![](secretcli-keys-list.png)
+![](secretd-keys-list.png)
 
 `exit` when you are done
 
@@ -207,14 +207,14 @@ docker exec -it secretdev /bin/bash
 
 cd code
 
-secretcli tx compute store contract.wasm.gz --from a --gas 1000000 -y --keyring-backend test
+secretd tx compute store contract.wasm.gz --from a --gas 1000000 -y --keyring-backend test
 ```
 
 #### Querying the Smart Contract and Code
 
 List current smart contract code
 ```bash
-secretcli query compute list-code
+secretd query compute list-code
 [
   {
     "id": 1,
@@ -239,12 +239,12 @@ To create an instance of this project we must also provide some JSON input data,
 ```bash
 INIT='{"count": 100000000}'
 CODE_ID=1
-secretcli tx compute instantiate $CODE_ID "$INIT" --from a --label "my counter" -y --keyring-backend test
+secretd tx compute instantiate $CODE_ID "$INIT" --from a --label "my counter" -y --keyring-backend test
 ```
 
 With the contract now initialized, we can find its address
 ```bash
-secretcli query compute list-contract-by-code 1
+secretd query compute list-contract-by-code 1
 ```
 Our instance is secret18vd8fpwxzck93qlwghaj6arh4p7c5n8978vsyg
 
@@ -252,12 +252,12 @@ We can query the contract state
 ```bash
 CONTRACT=secret18vd8fpwxzck93qlwghaj6arh4p7c5n8978vsyg
 
-secretcli query compute query $CONTRACT '{"get_count": {}}'
+secretd query compute query $CONTRACT '{"get_count": {}}'
 ```
 
 And we can increment our counter
 ```bash
-secretcli tx compute execute $CONTRACT '{"increment": {}}' --from a --keyring-backend test
+secretd tx compute execute $CONTRACT '{"increment": {}}' --from a --keyring-backend test
 ```
 
 ### Deploy to the Holodeck Testnet
@@ -271,7 +271,7 @@ Holodeck is the official Secret Network testnet. To deploy your contract to the 
 
 #### Install and Configure the Secret Network Light Client
 
-If you don't have the latest `secretcli`, using these [steps](https://github.com/enigmampc/SecretNetwork/blob/master/docs/testnet/install_cli.md) to download the 
+If you don't have the latest `secretd`, using these [steps](https://github.com/enigmampc/SecretNetwork/blob/master/docs/testnet/install_cli.md) to download the 
 CLI and add its location to your PATH.
 
 Before deploying your contract make sure it's configured to point to an existing RPC node. You can also use the testnet bootstrap node. Set the `chain-id` to 
@@ -279,23 +279,23 @@ Before deploying your contract make sure it's configured to point to an existing
 without providing an account password each time.
 
 ```bash
-secretcli config node http://bootstrap.secrettestnet.io:26657
+secretd config node http://bootstrap.secrettestnet.io:26657
 
-secretcli config chain-id holodeck-2
+secretd config chain-id holodeck-2
 
-secretcli config trust-node true
+secretd config trust-node true
 
-secretcli config keyring-backend test
+secretd config keyring-backend test
 ```
 
-*NOTE*: To reset your `keyring-backend`, use `secretcli config keyring-backend os`.
+*NOTE*: To reset your `keyring-backend`, use `secretd config keyring-backend os`.
 
 #### Get some SCRT from the faucet
 
 Create a key for the Holodeck testnet that you'll use to get SCRT from the faucet, store and instantiate the contract, and other testnet transactions.
 
 ```bash
-secretcli keys add <your account alias>
+secretd keys add <your account alias>
 ```
 
 This will output your address, a 45 character-string starting with `secret1...`. Copy/paste it to get some testnet SCRT from 
@@ -307,13 +307,13 @@ Continue when you have confirmed your account has some SCRT in it.
 Next upload the compiled, optimized contract to the testnet.
 
 ```bash
-secretcli tx compute store contract.wasm.gz --from <your account alias> -y --gas 1000000 --gas-prices=1.0uscrt
+secretd tx compute store contract.wasm.gz --from <your account alias> -y --gas 1000000 --gas-prices=1.0uscrt
 ```
 
 The result is a transaction hash (txhash). Query it to see the `code_id` in the logs, which you'll use to create an instance of the contract.
 
 ```bash
-secretcli query tx <txhash>
+secretd query tx <txhash>
 ```
 
 #### Instantiate your Secret Contract
@@ -323,7 +323,7 @@ To create an instance of your contract on Holodeck set the `CODE_ID` value below
 ```bash
 INIT='{"count": 100000000}'
 CODE_ID=<code_id>
-secretcli tx compute instantiate $CODE_ID "$INIT" --from <your account alias> --label "my counter" -y
+secretd tx compute instantiate $CODE_ID "$INIT" --from <your account alias> --label "my counter" -y
 ```
 
 You can use the testnet explorer [Transactions](http://explorer.secrettestnet.io/transactions) tab to view the contract instantiation.
