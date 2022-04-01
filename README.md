@@ -56,7 +56,7 @@ docker exec -it secretdev /bin/bash
 The local blockchain has a couple of keys setup for you (similar to accounts if you're familiar with Truffle Ganache). The keys are stored in the `test` keyring backend, which makes it easier for local development and testing.
 
 ```bash
-secretcli keys list --keyring-backend test
+secretd keys list --keyring-backend test
 ````
 
 ![](secretcli-keys-list.png)
