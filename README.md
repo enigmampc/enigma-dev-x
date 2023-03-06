@@ -1,3 +1,7 @@
+# DEPRECATED
+
+This repository is no longer supported. For an up-to-date guide to set up your local Secret Developer environment and deploy your first contract, use the [Secret docs](https://docs.scrt.network/secret-network-documentation/development/getting-started/setting-up-your-environment) instead.
+
 # Secret Contracts Guide
 
 This repository can be used to master Secret Contract development! In this document you'll find information on setting up a local Secret Network developer testnet (secretdev), learning secret contract basics and shortcuts to improve your development experience and finally build and deploy secret contracts of varying complexity with UIs to create your very own Secret Apps.
@@ -7,26 +11,26 @@ To learn more about secret contracts, please visit our [documentation page](http
 <details>
   <summary>Topics covered on this page</summary>
 
-  - [Setup the Local Developer Testnet](#/setup-the-local-developer-testnet)
-  - [Setup Secret Contracts](#/setup-secret-contracts)
-  - [Create Initial Smart Contract](#/create-initial-smart-contract)
-  - [Deploy Smart Contract to local Testnet](#/deploy-smart-contract-to-our-local-testnet)
-  - [Instantiate the Smart Contract](#/instantiate-the-smart-contract)
-  - Migrating to Testnet
-    * [Deploy to the Holodeck Testnet](#/deploy-to-the-holodeck-testnet)
-    * [Get SCRT from faucet](#/get-some-scrt-from-the-faucet)
-    * [Store the Secret Contract](#/store-the-secret-contract-on-holodeck)
-  - Secret Contracts
-    * [Secret Contracts 101](#/secret-contracts-101)
-    * [Secret Contract code explanation](#/secret-contract-code-explanation)
-    * [Secret Contracts - Advanced](#/secret-contracts---advanced)
-  - [SecretJS](#/secretjs)
-  - [Keplr integration](keplr-integration)
-  - Other resources
-    * [Privacy model of secret contracts](#/privacy-model-of-secret-contracts)
-    * [Tutorials from Secret Network community](#/tutorials-from-secret-network-community)
-    * [CosmWasm resources](#/cosmwasm-resources)
-  
+- [Setup the Local Developer Testnet](#/setup-the-local-developer-testnet)
+- [Setup Secret Contracts](#/setup-secret-contracts)
+- [Create Initial Smart Contract](#/create-initial-smart-contract)
+- [Deploy Smart Contract to local Testnet](#/deploy-smart-contract-to-our-local-testnet)
+- [Instantiate the Smart Contract](#/instantiate-the-smart-contract)
+- Migrating to Testnet
+  - [Deploy to the Holodeck Testnet](#/deploy-to-the-holodeck-testnet)
+  - [Get SCRT from faucet](#/get-some-scrt-from-the-faucet)
+  - [Store the Secret Contract](#/store-the-secret-contract-on-holodeck)
+- Secret Contracts
+  - [Secret Contracts 101](#/secret-contracts-101)
+  - [Secret Contract code explanation](#/secret-contract-code-explanation)
+  - [Secret Contracts - Advanced](#/secret-contracts---advanced)
+- [SecretJS](#/secretjs)
+- [Keplr integration](keplr-integration)
+- Other resources
+  - [Privacy model of secret contracts](#/privacy-model-of-secret-contracts)
+  - [Tutorials from Secret Network community](#/tutorials-from-secret-network-community)
+  - [CosmWasm resources](#/cosmwasm-resources)
+
 </details>
 
 ## Setup the Local Developer Testnet
@@ -49,6 +53,7 @@ docker run -it --rm \
 At this point you're running a local SecretNetwork full-node. Let's connect to the container so we can view and manage the secret keys:
 
 **NOTE**: In a new terminal
+
 ```bash
 docker exec -it secretdev /bin/bash
 ```
@@ -57,7 +62,7 @@ The local blockchain has a couple of keys setup for you (similar to accounts if 
 
 ```bash
 secretcli keys list --keyring-backend test
-````
+```
 
 ![](secretcli-keys-list.png)
 
@@ -66,12 +71,12 @@ secretcli keys list --keyring-backend test
 ## Setup Secret Contracts
 
 In order to setup Secret Contracts on your development environment, you will need to:
+
 - install Rust (you don't need to be a Rust expert to build Secret Contracts and you can check out the Rust book, rustlings course, examples to learn more at https://www.rust-lang.org/learn)
 - install the Rust dependencies
 - create your first project
 
 The Rust dependencies include the Rust compiler, cargo (_package manager_), toolchain and a package to generate projects (you can check out the Rust book, rustlings course, examples and more at https://www.rust-lang.org/learn).
-
 
 1. Install Rust
 
@@ -94,6 +99,7 @@ rustup target add wasm32-unknown-unknown --toolchain nightly
 ```
 
 3. If using linux, install the standard build tools:
+
 ```bash
 apt install build-essential
 ```
@@ -109,6 +115,7 @@ cargo install cargo-generate --features vendored-openssl
 ## Create Initial Smart Contract
 
 To create the smart contract you'll:
+
 - generate the initial project
 - compile the smart contract
 - run unit tests
@@ -145,7 +152,7 @@ Use the following command to compile the smart contract which produces the wasm 
 cargo wasm
 ```
 
-### Unit Tests 
+### Unit Tests
 
 #### Run unit tests
 
@@ -171,7 +178,6 @@ Auto-generate msg schemas (when changed):
 cargo schema
 ```
 
-
 ### Deploy Smart Contract to our local Testnet
 
 Before deploying or storing the contract on a testnet, you need to run the [secret contract optimizer](https://hub.docker.com/r/enigmampc/secret-contract-optimizer).
@@ -182,11 +188,13 @@ Before deploying or storing the contract on a testnet, you need to run the [secr
 docker run --rm -v "$(pwd)":/contract \
   --mount type=volume,source="$(basename "$(pwd)")_cache",target=/code/target \
   --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry \
-  enigmampc/secret-contract-optimizer  
+  enigmampc/secret-contract-optimizer
 ```
+
 The contract wasm needs to be optimized to get a smaller footprint. Cosmwasm notes state the contract would be too large for the blockchain unless optimized. This example contract.wasm is 1.8M before optimizing, 90K after.
 
 This creates a zip of two files:
+
 - contract.wasm
 - hash.txt
 
@@ -198,7 +206,7 @@ docker run -it --rm \
  -p 26657:26657 -p 26656:26656 -p 1337:1337 \
  -v $(pwd):/root/code \
  --name secretdev enigmampc/secret-network-sw-dev
- ```
+```
 
 Upload the optimized contract.wasm.gz:
 
@@ -213,6 +221,7 @@ secretcli tx compute store contract.wasm.gz --from a --gas 1000000 -y --keyring-
 #### Querying the Smart Contract and Code
 
 List current smart contract code
+
 ```bash
 secretcli query compute list-code
 [
@@ -230,6 +239,7 @@ secretcli query compute list-code
 
 At this point the contract's been uploaded and stored on the testnet, but there's no "instance."
 This is like `discovery migrate` which handles both the deploying and creation of the contract instance, except in Cosmos the deploy-execute process consists of 3 steps rather than 2 in Ethereum. You can read more about the logic behind this decision, and other comparisons to Solidity, in the [cosmwasm documentation](https://www.cosmwasm.com/docs/getting-started/smart-contracts). These steps are:
+
 1. Upload Code - Upload some optimized wasm code, no state nor contract address (example Standard ERC20 contract)
 2. Instantiate Contract - Instantiate a code reference with some initial state, creates new address (example set token name, max issuance, etc for my ERC20 token)
 3. Execute Contract - This may support many different calls, but they are all unprivileged usage of a previously instantiated contract, depends on the contract design (example: Send ERC20 token, grant approval to other contract)
@@ -243,12 +253,15 @@ secretcli tx compute instantiate $CODE_ID "$INIT" --from a --label "my counter" 
 ```
 
 With the contract now initialized, we can find its address
+
 ```bash
 secretcli query compute list-contract-by-code 1
 ```
+
 Our instance is secret18vd8fpwxzck93qlwghaj6arh4p7c5n8978vsyg
 
 We can query the contract state
+
 ```bash
 CONTRACT=secret18vd8fpwxzck93qlwghaj6arh4p7c5n8978vsyg
 
@@ -256,6 +269,7 @@ secretcli query compute query $CONTRACT '{"get_count": {}}'
 ```
 
 And we can increment our counter
+
 ```bash
 secretcli tx compute execute $CONTRACT '{"increment": {}}' --from a --keyring-backend test
 ```
@@ -271,11 +285,11 @@ Holodeck is the official Secret Network testnet. To deploy your contract to the 
 
 #### Install and Configure the Secret Network Light Client
 
-If you don't have the latest `secretcli`, using these [steps](https://github.com/enigmampc/SecretNetwork/blob/master/docs/testnet/install_cli.md) to download the 
+If you don't have the latest `secretcli`, using these [steps](https://github.com/enigmampc/SecretNetwork/blob/master/docs/testnet/install_cli.md) to download the
 CLI and add its location to your PATH.
 
-Before deploying your contract make sure it's configured to point to an existing RPC node. You can also use the testnet bootstrap node. Set the `chain-id` to 
-`holodeck-2`. Below we've also got a config setting to point to the `test` keyring backend which allows you to interact with the testnet and your contract 
+Before deploying your contract make sure it's configured to point to an existing RPC node. You can also use the testnet bootstrap node. Set the `chain-id` to
+`holodeck-2`. Below we've also got a config setting to point to the `test` keyring backend which allows you to interact with the testnet and your contract
 without providing an account password each time.
 
 ```bash
@@ -288,7 +302,7 @@ secretcli config trust-node true
 secretcli config keyring-backend test
 ```
 
-*NOTE*: To reset your `keyring-backend`, use `secretcli config keyring-backend os`.
+_NOTE_: To reset your `keyring-backend`, use `secretcli config keyring-backend os`.
 
 #### Get some SCRT from the faucet
 
@@ -298,8 +312,8 @@ Create a key for the Holodeck testnet that you'll use to get SCRT from the fauce
 secretcli keys add <your account alias>
 ```
 
-This will output your address, a 45 character-string starting with `secret1...`. Copy/paste it to get some testnet SCRT from 
-[the faucet](https://faucet.secrettestnet.io/). 
+This will output your address, a 45 character-string starting with `secret1...`. Copy/paste it to get some testnet SCRT from
+[the faucet](https://faucet.secrettestnet.io/).
 Continue when you have confirmed your account has some SCRT in it.
 
 #### Store the Secret Contract on Holodeck
@@ -333,6 +347,7 @@ You can use the testnet explorer [Transactions](http://explorer.secrettestnet.io
 ### Project Structure
 
 The source directory (`src/`) has these files:
+
 ```
 contract.rs  lib.rs  msg.rs  state.rs
 ```
@@ -381,10 +396,10 @@ pub struct CountResponse {
 }
 
 ```
+
 ### Secret Contract code explanation
 
 Use [this link](https://github.com/enigmampc/SecretSimpleVote/blob/master/src/contract.rs) to a see a sample voting contract and a line by line description of everything you need to know
-
 
 ### Unit Tests
 
@@ -418,40 +433,48 @@ mod tests {
 ```
 
 ## Secret Toolkit
+
 [Secret Toolkit](https://github.com/enigmampc/secret-toolkit) is a collection of Rust packages that contain common tools used in development of Secret Contracts running on the Secret Network.
 
 #### Calling other Contracts
-[Secret Toolkit](https://github.com/enigmampc/secret-toolkit) contains very helpful tools that can be used to call other contracts from your own.  [Here](https://github.com/baedrik/SCRT-sealed-bid-auction/blob/master/CALLING_OTHER_CONTRACTS.md) is a guide on how to call other contracts from your own using the `InitCallback`, `HandleCallback`, and `Query` traits defined in the [utils package](https://github.com/enigmampc/secret-toolkit/tree/master/packages/utils).
 
-If you are specifically wanting to call Handle functions or Queries of [SNIP-20 token contracts](https://github.com/enigmampc/snip20-reference-impl), there are individually named functions you can use to make it even simpler than using the generic traits.  These are located in the [SNIP-20 package](https://github.com/enigmampc/secret-toolkit/tree/master/packages/snip20).
+[Secret Toolkit](https://github.com/enigmampc/secret-toolkit) contains very helpful tools that can be used to call other contracts from your own. [Here](https://github.com/baedrik/SCRT-sealed-bid-auction/blob/master/CALLING_OTHER_CONTRACTS.md) is a guide on how to call other contracts from your own using the `InitCallback`, `HandleCallback`, and `Query` traits defined in the [utils package](https://github.com/enigmampc/secret-toolkit/tree/master/packages/utils).
+
+If you are specifically wanting to call Handle functions or Queries of [SNIP-20 token contracts](https://github.com/enigmampc/snip20-reference-impl), there are individually named functions you can use to make it even simpler than using the generic traits. These are located in the [SNIP-20 package](https://github.com/enigmampc/secret-toolkit/tree/master/packages/snip20).
 
 ## Secret Contracts - Advanced
+
 Use [this link](https://github.com/baedrik/SCRT-sealed-bid-auction) for a sealed-bid (secret) auction contract that makes use of [SNIP-20](https://github.com/enigmampc/snip20-reference-impl) and a walkthrough of the contract
 
 ## Path to Secret Apps, build a UI using secret.js
+
 Now that we have mastered secret contract development, let's see how to connect a secret contract to a front-end using secret.js and how to add wallet functionality using Keplr.
 
 ### secret.js
+
 Secret.js is how users interact with Secret Network. Secret.js is mostly based on CosmWasm.js. While secret.js documents are being updated, you can refer to CosmWasm.js documents
+
 - [CosmWasm JS](cosmwasm-js.md)
 - [Frontend development](building-a-frontend.md)
 - [SecretJS Templates](https://github.com/enigmampc/SecretJS-Templates)
 
-
 ### Keplr integration
+
 [Keplr](https://wallet.keplr.app/#/dashboard) is the web wallet users need to interact with Secret Applications. Please use [this link](https://github.com/enigmampc/SecretJS-Templates/tree/master/6_wallets) for sample implementations of Keplr and Secret.js
 
 ## Other resources
 
 ### Privacy model of secret contracts
+
 Secret Contracts are based on CosmWasm v0.10, but they have additional privacy properties that can only be found on Secret Network.Secret Contract developers must always consider the trade-off between privacy, user experience, performance and gas usage. Please use this [link](https://build.scrt.network/dev/privacy-model-of-secret-contracts.html) to learn more about the privacy model of secret contracts.
 
 ### Tutorials from Secret Network community
+
 Visit [this link](https://learn.figment.io/network-documentation/secret) for all tutorials about Secret Network
 
 ### CosmWasm resources
+
 Smart Contracts in the Secret Network based based on CosmWasm. Therefore, for troubleshooting and additional context, CosmWasm documentation may be very useful. Here are some of the links we relied on in putting together this guide:
 
 - [cosmwasm repo](https://github.com/CosmWasm/cosmwasm))
-- [cosmwasm docs](https://docs.cosmwasm.com/) 
-
+- [cosmwasm docs](https://docs.cosmwasm.com/)
